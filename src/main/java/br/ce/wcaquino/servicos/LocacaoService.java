@@ -14,6 +14,11 @@ import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoService {
 	
+	public String VPublica;
+	protected String vProtegida;
+	private String VPrivado;
+	String vDefault;
+	
 	public Locacao alugarFilme(Usuario usuario, Filme filme) {
 		Locacao locacao = new Locacao();
 		locacao.setFilme(filme);
@@ -30,22 +35,5 @@ public class LocacaoService {
 		//TODO adicionar método para salvar
 		
 		return locacao;
-	}
-	@Test
-	public void teste() {
-		
-		// Cenario
-		LocacaoService service = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario1");
-		Filme filme = new Filme("Filme 1", 2, 5.0);
-		
-		// Ação
-		Locacao locacao = service.alugarFilme(usuario, filme);
-		
-		// Verificação
-		Assert.assertTrue(locacao.getValor() == 5.0);
-		Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
-		Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
-		
 	}
 }
