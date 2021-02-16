@@ -1,5 +1,8 @@
 package br.ce.wcaquino.servicos;
 
+import static br.ce.wcaquino.builders.FilmeBuilder.umFilme;
+import static br.ce.wcaquino.builders.FilmeBuilder.umFilmeSemEstoque;
+import static br.ce.wcaquino.builders.UsuarioBuilder.umUsuario;
 import static br.ce.wcaquino.matchers.MatchersProprios.caiNumaSegunda;
 import static br.ce.wcaquino.matchers.MatchersProprios.eHoje;
 import static br.ce.wcaquino.matchers.MatchersProprios.eHojeComDiferencaDias;
@@ -28,6 +31,7 @@ import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exception.FilmeSemEstoqueException;
 import br.ce.wcaquino.exception.LocadoraException;
 import br.ce.wcaquino.utils.DataUtils;
+import buildermaster.BuilderMaster;
 
 public class LocacaoServiceTest {
 	
@@ -51,8 +55,8 @@ public class LocacaoServiceTest {
 		Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 		
 		// Cenario
-		Usuario usuario = new Usuario("Usuario1");
-		List<Filme> filme = Arrays.asList(new Filme("Filme 1", 2, 5.0));
+		Usuario usuario = umUsuario().agora();
+		List<Filme> filme = Arrays.asList(umFilme().comValor(5.0).agora());
 		
 		// Ação
 		Locacao locacao = service.alugarFilme(usuario, filme);
@@ -71,8 +75,8 @@ public class LocacaoServiceTest {
 	{
 		
 		// Cenario
-		Usuario usuario = new Usuario("Usuario1");
-		List<Filme> filme = Arrays.asList(new Filme("Filme 1", 0, 4.0));
+		Usuario usuario = umUsuario().agora();
+		List<Filme> filme = Arrays.asList(umFilmeSemEstoque().agora());
 			
 		// Ação
 		service.alugarFilme(usuario, filme);
@@ -102,7 +106,7 @@ public class LocacaoServiceTest {
 	public void naoDeveAlugarFilmeSemFilme() throws FilmeSemEstoqueException, LocadoraException
 	{
 		// Cenario
-		Usuario usuario = new Usuario("Usuario1");
+		Usuario usuario = umUsuario().agora();
 		
 		exception.expect(LocadoraException.class);
 		exception.expectMessage("Filme vazio!");
@@ -118,14 +122,18 @@ public class LocacaoServiceTest {
 		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 		
 		// Cenario
-		Usuario usuario = new Usuario("Usuário 1");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 1, 5.0));
+		Usuario usuario = umUsuario().agora();
+		List<Filme> filmes = Arrays.asList(umFilme().agora());
 		
 		// Acao
 		Locacao retorno = service.alugarFilme(usuario, filmes);
 		
 		// Verificacao
 		Assert.assertThat(retorno.getDataRetorno(), caiNumaSegunda());
+	}
+	
+	public static void main(String[] args) {
+		new BuilderMaster().gerarCodigoClasse(Locacao.class);
 	}
 	
 	
